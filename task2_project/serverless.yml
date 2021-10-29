@@ -1,0 +1,352 @@
+service: task-2-image-recognition
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+
+ 
+
+# environment variables
+environment:
+  # blobsTableName: ${self:resources.Resources.blobsTable.Properties.TableName}
+ 
+package:
+
+
+functions:
+  createBlob:
+    handler: create_blob.handler
+    description: generate new blob id and request a presigned url form s3 bucket
+    role:  FuncRole
+    events:
+     - http:
+          path: reqUrl
+          method: post
+          integration: lambda
+    environment:
+      bucketName: ${self:resources.Resources.uploadBucket.Properties.BucketName}     
+          
+              
+  processBlob:
+    handler: process_blob.handler
+    description: triggered when a new image uploaded to the upload bucket to start image recognition process 
+    role:  FuncRole
+    events:
+      - s3:
+          existing: true 
+          bucket: 
+            Ref : uploadBucket
+          event: s3:ObjectCreated:*
+
+  callbackClient:
+    handler: make_callback.handler
+    description: triggered when recognition process update blobs table with the resul
+    role: CallBackRole
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - blobsTable
+              - StreamArn
+          batchSize: 1
+    
+
+
+
+
+custom:
+
+  pythonRequirements:
+
+    dockerizePip: true
+  
+  # apiGatewayServiceProxies:
+  #   - dynamodb:
+  #       path: /dynamodb
+  #       method: get
+  #       tableName: { Ref: blobsTable }
+  #       hashKey:
+  #         queryStringParam: blob_id # use query string parameter
+  #         attributeType: S
+  #       action: GetItem
+  #       cors: true
+
+
+
+resources:
+ Resources:
+  uploadBucket:
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: ${opt:stage, 'dev'}-blob-upload-image
+       AccessControl: Private
+       CorsConfiguration:
+          CorsRules:
+            - AllowedMethods:
+                - PUT
+                - GET
+                - POST
+                - HEAD
+              AllowedOrigins:
+                - "*"
+              AllowedHeaders:
+                - "*"
+      
+
+  BucketPolicyBlobBucket:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        Bucket:
+          Ref: uploadBucket 
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: "*"  
+              Action:
+                - 's3:*'
+              Resource:
+                - 'Fn::Join':
+                      - ''
+                      -
+                        - 'arn:aws:s3:::'
+                        - Ref: uploadBucket
+                        - '/*'
+                        
+                
+ 
+  blobsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: blobs
+        AttributeDefinitions:
+          - AttributeName: blob_id
+            AttributeType: S
+
+        KeySchema:
+          - AttributeName: blob_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES        
+  
+  
+  
+
+
+  FuncRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /service-role/
+        RoleName: ${opt:stage, 'dev'}-Func-role
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: FuncPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                   - s3:*
+                  Resource:
+                    - 'Fn::Join':
+                      - ''
+                      -
+                        - 'arn:aws:s3:::'
+                        - Ref: uploadBucket
+                        - '/*'  
+                - Effect: Allow
+                  Action:
+                    - dynamodb:*
+                  Resource:
+                     Fn::GetAtt:
+                      - blobsTable
+                      - Arn 
+                      
+                - Effect: Allow
+                  Action:
+                   - "logs:CreateLogGroup"
+                   - "logs:CreateLogStream"
+                   - "logs:PutLogEvents" 
+                  Resource: '*'  
+                - Effect: Allow
+                  Action:
+                   - "rekognition:DetectLabels"
+                  Resource: '*'       
+  CallBackRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /service-role/
+        RoleName: ${opt:stage, 'dev'}-callback-role
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: callbackPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "dynamodb:*"
+                    - "dynamodb:GetRecords"
+                    - "dynamodb:GetShardIterator"
+                    - "dynamodb:DescribeStream"
+                    - "dynamodb:ListShards"
+                    - "dynamodb:ListStreams"
+                  Resource:
+                    # - 'Fn::Join':
+                    #   - ''
+                    #   - - Fn::GetAtt:
+                    #         - blobsTable
+                    #         - StreamArn
+                    #     - '/*'  ""
+                    - 'arn:aws:dynamodb:us-east-1:888360479994:table/blobs/stream/*'
+                - Effect: Allow
+                  Action:
+                   - "logs:CreateLogGroup"
+                   - "logs:CreateLogStream"
+                   - "logs:PutLogEvents" 
+                  Resource: '*'  
+
+  ApiGatewayDynamoRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${opt:stage, 'dev'}-ApiGatewayDynamoRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Principal:
+                Service: 'apigateway.amazonaws.com'
+              Action:
+                - 'sts:AssumeRole'
+        Policies:
+          - PolicyName: 'ApiGatewayDynamoPolicy'
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: 'Allow'
+                  Action:
+                    # - 'dynamodb:DescribeTable'
+                    # - 'dynamodb:BatchWriteItem'
+                    # - 'dynamodb:PutItem'
+                    - 'dynamodb:Query'
+                    # - 'dynamodb:UpdateItem'
+                    # - 'dynamodb:GetItem'
+                  Resource:
+                    - Fn::GetAtt: [blobsTable, Arn]
+                - Effect: 'Allow'
+                  Action:
+                    - 'dynamodb:ListTables'
+                  Resource: '*'
+                  Condition: {}
+  ProxyResource:
+      Type: AWS::ApiGateway::Resource
+      Properties:
+        ParentId:
+          Fn::GetAtt:
+            - ApiGatewayRestApi # our default Rest API logical ID
+            - RootResourceId
+        PathPart: blobs # the endpoint in  API that is set as proxy
+        RestApiId:
+          Ref: ApiGatewayRestApi
+  ProxyMethod:
+        Type: AWS::ApiGateway::Method
+        Properties:
+            ResourceId:
+              Ref: ProxyResource
+            RestApiId:
+              Ref: ApiGatewayRestApi
+            HttpMethod:  GET # the method of  proxy
+            MethodResponses:
+              - StatusCode: 200
+            AuthorizationType: NONE  
+            RequestParameters:
+              method.request.querystring.blob_id: true
+                
+            Integration:
+              IntegrationHttpMethod: POST
+              Type: AWS
+              Uri: arn:aws:apigateway:us-east-1:dynamodb:action/Query # the URL  to set a proxy to
+              RequestParameters:
+                integration.request.querystring.blob_id: method.request.querystring.blob_id 
+              Credentials:
+                Fn::GetAtt: [ApiGatewayDynamoRole, Arn]
+
+              RequestTemplates:
+                application/json: | 
+                  {  "TableName" : "blobs",
+                     "KeyConditionExpression": "blob_id = :v",
+                     "ExpressionAttributeValues" : 
+                     { ":v" :{"S" : "$input.params('blob_id')"}}
+                  }  
+
+
+              IntegrationResponses:
+                - StatusCode: '200'
+                  # SelectionPattern: "2\\d{2}"
+                  # ResponseParameters:
+                  #   method.response.header.Access-Control-Allow-Origin: true
+                  # ResponseTemplates: 
+                  #   application/json: '{}'
+                - StatusCode: '400'
+                  # SelectionPattern: "4\\d{2}"
+                  # ResponseParameters:
+                  #   method.response.header.Access-Control-Allow-Origin: true     
+        
+    
+  ProxyDeployment:
+      Type: AWS::ApiGateway::Deployment
+      DependsOn: ProxyMethod
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: ${self:provider.stage} 
+
+
+  # Stage:
+  #   Type: AWS::ApiGateway::Stage
+  #   DependsOn:
+  #     - ProxyResource
+  #     - ProxyDeployment
+  #   Properties:
+  #     StageName: ${self:provider.stage} 
+  #     RestApiId: 
+  #       Ref: ApiGatewayRestApi
+  #     DeploymentId: 
+  #       Ref: ProxyDeployment      
+        # ${self:provider.stage} 
+    
+ Outputs:
+    uploadBucket:
+      Description: "the bucket that the client upload images to"
+      Value: uploadBucket
+
+
+
+
+
+plugins:
+  - serverless-python-requirements

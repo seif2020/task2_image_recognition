@@ -1,0 +1,92 @@
+openapi: 3.1.0
+info:
+  title: Task2 API
+  version: '1.0'
+  description: Image Recognition task
+servers:
+  - url: 'https://finvo.stoplight.io/'
+    description: dev
+paths:
+  '/blobs/{blob_id}':
+    parameters:
+      - schema:
+          type: string
+        name: blob_id
+        in: path
+        required: true
+    get:
+      summary: ''
+      operationId: get-blobs-results
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  blob_id:
+                    type: integer
+                  blob_name:
+                    type: string
+                  confidence:
+                    type: number
+                required:
+                  - blob_id
+                  - blob_name
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exception:
+                    type: string
+             
+          description: ''
+      description: 'get the image recognition jobs results '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+  /blobs:
+    post:
+      summary: ''
+      operationId: post-blobs
+      responses:
+        '200':
+          description: 'OK, blob created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presigned_url:
+                    type: string
+        '400':
+          description: 'Bad Request '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exception:
+                    type: string
+      description: create a new blob and generate presigned url
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                callback_url:
+                  type: string
+        description: optional call back url
+components:
+  schemas: {}
+  requestBodies: {}
+  responses: {}
