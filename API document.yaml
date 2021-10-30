@@ -5,7 +5,11 @@ info:
   description: Image Recognition task
 servers:
   - url: 'https://wjevk3l5ai.execute-api.us-east-1.amazonaws.com/dev/'
+<<<<<<< HEAD
     description: dev
+=======
+    description: dev stage api 
+>>>>>>> 08726b2598d10318a1f8161e6cf25ea14d45fdf7
 paths:
   /blobs/:
     parameters: []
