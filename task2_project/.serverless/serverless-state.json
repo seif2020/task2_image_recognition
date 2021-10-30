@@ -109,7 +109,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635540272204-2021-10-29T20:44:32.204Z/task-2-image-recognition.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/task-2-image-recognition.zip"
               },
               "Handler": "create_blob.handler",
               "Runtime": "python3.8",
@@ -119,7 +119,7 @@
               "Description": "generate new blob id and request a presigned url form s3 bucket",
               "Environment": {
                 "Variables": {
-                  "bucketName": "dev-blob-upload-image"
+                  "bucketName": "blobs-images-upload"
                 }
               },
               "Role": {
@@ -141,7 +141,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635540272204-2021-10-29T20:44:32.204Z/task-2-image-recognition.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/task-2-image-recognition.zip"
               },
               "Handler": "process_blob.handler",
               "Runtime": "python3.8",
@@ -168,7 +168,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635540272204-2021-10-29T20:44:32.204Z/task-2-image-recognition.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/task-2-image-recognition.zip"
               },
               "Handler": "make_callback.handler",
               "Runtime": "python3.8",
@@ -188,36 +188,36 @@
               "CallBackRole"
             ]
           },
-          "CreateBlobLambdaVersionfqzaAggj5k2IXPpErXWOdmwqPlg1GPfgfewfncUjwM": {
+          "CreateBlobLambdaVersionvcGXeWJrJvLWhuaaJ5UHoe07MPbdW67JsP7qcywY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateBlobLambdaFunction"
               },
-              "CodeSha256": "I9U4OnHEYPjHf4rTN5DDqRFeCeEElV1p+nUAOZWL8R4=",
+              "CodeSha256": "VAKYX0nwYfV1pA7t3+/eSjVJs8o4UEt2gaao9X6r2Ec=",
               "Description": "generate new blob id and request a presigned url form s3 bucket"
             }
           },
-          "ProcessBlobLambdaVersionoljtYPUxjDa5uxbVSpDSdUzhI8CXjEShU7WCvzjPHM": {
+          "ProcessBlobLambdaVersioniCjEotNo0WEJJhxLj9D1t7zrZmWUsyHOIDFdmGF2PI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ProcessBlobLambdaFunction"
               },
-              "CodeSha256": "I9U4OnHEYPjHf4rTN5DDqRFeCeEElV1p+nUAOZWL8R4=",
+              "CodeSha256": "VAKYX0nwYfV1pA7t3+/eSjVJs8o4UEt2gaao9X6r2Ec=",
               "Description": "triggered when a new image uploaded to the upload bucket to start image recognition process"
             }
           },
-          "CallbackClientLambdaVersion6LJqVf2NysqefzrYjAzFX06sk9yOVw2eBl90aJJE": {
+          "CallbackClientLambdaVersionaXrIHnDnmXEP7G6SFm9auhs8TOBkBiWo7LSFY4nJtQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CallbackClientLambdaFunction"
               },
-              "CodeSha256": "I9U4OnHEYPjHf4rTN5DDqRFeCeEElV1p+nUAOZWL8R4=",
+              "CodeSha256": "VAKYX0nwYfV1pA7t3+/eSjVJs8o4UEt2gaao9X6r2Ec=",
               "Description": "triggered when recognition process update blobs table with the resul"
             }
           },
@@ -345,7 +345,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635540272204-2021-10-29T20:44:32.204Z/custom-resources.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/custom-resources.zip"
               },
               "FunctionName": "task-2-image-recognition-dev-custom-resource-existing-s3",
               "Handler": "s3/handler.handler",
@@ -543,7 +543,7 @@
               "CreateBlobLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1635540250626": {
+          "ApiGatewayDeployment1635628607161": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -618,7 +618,7 @@
           "uploadBucket": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
-              "BucketName": "dev-blob-upload-image",
+              "BucketName": "blobs-images-upload",
               "AccessControl": "Private",
               "CorsConfiguration": {
                 "CorsRules": [
@@ -703,7 +703,7 @@
             "Type": "AWS::IAM::Role",
             "Properties": {
               "Path": "/service-role/",
-              "RoleName": "dev-Func-role",
+              "RoleName": "Func-role",
               "AssumeRolePolicyDocument": {
                 "Version": "2012-10-17",
                 "Statement": [
@@ -782,7 +782,7 @@
             "Type": "AWS::IAM::Role",
             "Properties": {
               "Path": "/service-role/",
-              "RoleName": "dev-callback-role",
+              "RoleName": "callback-role",
               "AssumeRolePolicyDocument": {
                 "Version": "2012-10-17",
                 "Statement": [
@@ -813,9 +813,9 @@
                           "dynamodb:ListShards",
                           "dynamodb:ListStreams"
                         ],
-                        "Resource": [
-                          "arn:aws:dynamodb:us-east-1:888360479994:table/blobs/stream/*"
-                        ]
+                        "Resource": {
+                          "Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/blobs/stream/*"
+                        }
                       },
                       {
                         "Effect": "Allow",
@@ -970,7 +970,7 @@
           "CreateBlobLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateBlobLambdaVersionfqzaAggj5k2IXPpErXWOdmwqPlg1GPfgfewfncUjwM"
+              "Ref": "CreateBlobLambdaVersionvcGXeWJrJvLWhuaaJ5UHoe07MPbdW67JsP7qcywY"
             },
             "Export": {
               "Name": "sls-task-2-image-recognition-dev-CreateBlobLambdaFunctionQualifiedArn"
@@ -979,7 +979,7 @@
           "ProcessBlobLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ProcessBlobLambdaVersionoljtYPUxjDa5uxbVSpDSdUzhI8CXjEShU7WCvzjPHM"
+              "Ref": "ProcessBlobLambdaVersioniCjEotNo0WEJJhxLj9D1t7zrZmWUsyHOIDFdmGF2PI"
             },
             "Export": {
               "Name": "sls-task-2-image-recognition-dev-ProcessBlobLambdaFunctionQualifiedArn"
@@ -988,7 +988,7 @@
           "CallbackClientLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CallbackClientLambdaVersion6LJqVf2NysqefzrYjAzFX06sk9yOVw2eBl90aJJE"
+              "Ref": "CallbackClientLambdaVersionaXrIHnDnmXEP7G6SFm9auhs8TOBkBiWo7LSFY4nJtQ"
             },
             "Export": {
               "Name": "sls-task-2-image-recognition-dev-CallbackClientLambdaFunctionQualifiedArn"
@@ -1168,7 +1168,7 @@
           }
         ],
         "environment": {
-          "bucketName": "dev-blob-upload-image"
+          "bucketName": "blobs-images-upload"
         },
         "name": "task-2-image-recognition-dev-createBlob",
         "package": {},
@@ -1176,7 +1176,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "CreateBlobLambdaVersionfqzaAggj5k2IXPpErXWOdmwqPlg1GPfgfewfncUjwM"
+        "versionLogicalId": "CreateBlobLambdaVersionvcGXeWJrJvLWhuaaJ5UHoe07MPbdW67JsP7qcywY"
       },
       "processBlob": {
         "handler": "process_blob.handler",
@@ -1199,7 +1199,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "ProcessBlobLambdaVersionoljtYPUxjDa5uxbVSpDSdUzhI8CXjEShU7WCvzjPHM"
+        "versionLogicalId": "ProcessBlobLambdaVersioniCjEotNo0WEJJhxLj9D1t7zrZmWUsyHOIDFdmGF2PI"
       },
       "callbackClient": {
         "handler": "make_callback.handler",
@@ -1225,7 +1225,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "CallbackClientLambdaVersion6LJqVf2NysqefzrYjAzFX06sk9yOVw2eBl90aJJE"
+        "versionLogicalId": "CallbackClientLambdaVersionaXrIHnDnmXEP7G6SFm9auhs8TOBkBiWo7LSFY4nJtQ"
       }
     },
     "resources": {
@@ -1233,7 +1233,7 @@
         "uploadBucket": {
           "Type": "AWS::S3::Bucket",
           "Properties": {
-            "BucketName": "dev-blob-upload-image",
+            "BucketName": "blobs-images-upload",
             "AccessControl": "Private",
             "CorsConfiguration": {
               "CorsRules": [
@@ -1318,7 +1318,7 @@
           "Type": "AWS::IAM::Role",
           "Properties": {
             "Path": "/service-role/",
-            "RoleName": "dev-Func-role",
+            "RoleName": "Func-role",
             "AssumeRolePolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
@@ -1397,7 +1397,7 @@
           "Type": "AWS::IAM::Role",
           "Properties": {
             "Path": "/service-role/",
-            "RoleName": "dev-callback-role",
+            "RoleName": "callback-role",
             "AssumeRolePolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
@@ -1428,9 +1428,9 @@
                         "dynamodb:ListShards",
                         "dynamodb:ListStreams"
                       ],
-                      "Resource": [
-                        "arn:aws:dynamodb:us-east-1:888360479994:table/blobs/stream/*"
-                      ]
+                      "Resource": {
+                        "Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/blobs/stream/*"
+                      }
                     },
                     {
                       "Effect": "Allow",
@@ -1610,7 +1610,7 @@
     "artifact": "C:\\Users\\Seif\\task2_image_recognition\\task2_project\\.serverless\\task-2-image-recognition.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/task-2-image-recognition/dev/1635540272204-2021-10-29T20:44:32.204Z",
+    "artifactDirectoryName": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z",
     "artifact": "task-2-image-recognition.zip"
   }
 }

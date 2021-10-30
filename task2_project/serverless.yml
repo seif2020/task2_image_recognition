@@ -8,12 +8,13 @@ provider:
   lambdaHashingVersion: 20201221
   stage: ${opt:stage, 'dev'}
   region: us-east-1
-
+  
  
 
 # environment variables
 environment:
   # blobsTableName: ${self:resources.Resources.blobsTable.Properties.TableName}
+    # bucketname: ${opt:bucket, 'blob-upload-image'}
  
 package:
 
@@ -62,6 +63,8 @@ functions:
 
 custom:
 
+
+
   pythonRequirements:
 
     dockerizePip: true
@@ -84,7 +87,7 @@ resources:
   uploadBucket:
      Type: AWS::S3::Bucket
      Properties:
-       BucketName: ${opt:stage, 'dev'}-blob-upload-image
+       BucketName: ${opt:bucket, 'blob-upload-image'}
        AccessControl: Private
        CorsConfiguration:
           CorsRules:
@@ -108,7 +111,9 @@ resources:
           Version: '2012-10-17'
           Statement:
             - Effect: Allow
-              Principal: "*"  
+              Principal: "*"
+                # Fn::GetAtt: [FuncRole, Arn] 
+                # Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:role/service-role/callback-role'
               Action:
                 - 's3:*'
               Resource:
@@ -147,7 +152,7 @@ resources:
       Type: AWS::IAM::Role
       Properties:
         Path: /service-role/
-        RoleName: ${opt:stage, 'dev'}-Func-role
+        RoleName: Func-role
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -193,7 +198,8 @@ resources:
       Type: AWS::IAM::Role
       Properties:
         Path: /service-role/
-        RoleName: ${opt:stage, 'dev'}-callback-role
+        RoleName: callback-role
+        # ${opt:stage, 'dev'}-
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -222,7 +228,7 @@ resources:
                     #         - blobsTable
                     #         - StreamArn
                     #     - '/*'  ""
-                    - 'arn:aws:dynamodb:us-east-1:888360479994:table/blobs/stream/*'
+                    Fn::Sub: 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/blobs/stream/*'
                 - Effect: Allow
                   Action:
                    - "logs:CreateLogGroup"
@@ -249,12 +255,9 @@ resources:
               Statement:
                 - Effect: 'Allow'
                   Action:
-                    # - 'dynamodb:DescribeTable'
-                    # - 'dynamodb:BatchWriteItem'
-                    # - 'dynamodb:PutItem'
+
                     - 'dynamodb:Query'
-                    # - 'dynamodb:UpdateItem'
-                    # - 'dynamodb:GetItem'
+
                   Resource:
                     - Fn::GetAtt: [blobsTable, Arn]
                 - Effect: 'Allow'

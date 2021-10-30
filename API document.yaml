@@ -4,16 +4,11 @@ info:
   version: '1.0'
   description: Image Recognition task
 servers:
-  - url: 'https://finvo.stoplight.io/'
+  - url: 'https://wjevk3l5ai.execute-api.us-east-1.amazonaws.com/dev/'
     description: dev
 paths:
-  '/blobs/{blob_id}':
-    parameters:
-      - schema:
-          type: string
-        name: blob_id
-        in: path
-        required: true
+  /blobs/:
+    parameters: []
     get:
       summary: ''
       operationId: get-blobs-results
@@ -23,17 +18,25 @@ paths:
           content:
             application/json:
               schema:
+                description: ''
                 type: object
                 properties:
-                  blob_id:
-                    type: integer
-                  blob_name:
+                  Count:
                     type: string
-                  confidence:
-                    type: number
+                    minLength: 1
+                  Items:
+                    type: array
+                    items:
+                      required: []
+                      properties: {}
+                  ScannedCount:
+                    type: string
+                    minLength: 1
                 required:
-                  - blob_id
-                  - blob_name
+                  - Count
+                  - Items
+                  - ScannedCount
+
         '400':
           description: Bad Request
           content:
@@ -43,7 +46,8 @@ paths:
                 properties:
                   exception:
                     type: string
-             
+              examples: {}
+        '':
           description: ''
       description: 'get the image recognition jobs results '
       requestBody:
@@ -53,10 +57,16 @@ paths:
               type: object
               properties: {}
         description: ''
-  /blobs:
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: blob_id
+          description: the id of the blob item
+  /reqUrl:
     post:
-      summary: ''
-      operationId: post-blobs
+      summary: 'request a presigned url from lambda function'
+      operationId: request-url
       responses:
         '200':
           description: 'OK, blob created successfully'
@@ -67,6 +77,15 @@ paths:
                 properties:
                   presigned_url:
                     type: string
+                  jpg_presigned_upload_url:
+                     type: string
+                  png_presigned_upload_url: 
+                     type: string  
+                  error_message:
+                    type: string
+
+
+
         '400':
           description: 'Bad Request '
           content:
@@ -76,7 +95,7 @@ paths:
                 properties:
                   exception:
                     type: string
-      description: create a new blob and generate presigned url
+      description: request a presigned url
       requestBody:
         content:
           application/json:
@@ -85,8 +104,7 @@ paths:
               properties:
                 callback_url:
                   type: string
-        description: optional call back url
-components:
-  schemas: {}
-  requestBodies: {}
-  responses: {}
+                file_name:
+                  type: string  
+        description: optional call back url and file name
+

@@ -53,12 +53,14 @@ def handler(event, context):
                 
                 # create a new item in the blobs table with the optional callback url
                 response = table.put_item(
-                    Item={
-                        'blob_id': id,
-                        'callback_url': callback_url
-                    
-                            }
-                        )
+                Item={
+                    'blob_id': id,
+                    'callback_url': callback_url,
+                    'isProcessed':'N'
+                
+                        }
+                    )
+                print(response)    
                 #generate a presigned url for uploading  
                 if extension == 'jpg':
                     extension = 'jpeg'
@@ -81,10 +83,12 @@ def handler(event, context):
             response = table.put_item(
                 Item={
                     'blob_id': id,
-                    'callback_url': callback_url
+                    'callback_url': callback_url,
+                    'isProcessed':'N'
                 
                         }
                     )
+            print(response)        
             #generate a presigned url for uploading a JPG ,JPEG files formats        
             jpg_presigned_upload_url = s3.generate_presigned_url('put_object',Params={
                     'Bucket': bucket_name,

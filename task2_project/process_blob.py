@@ -8,8 +8,14 @@ dynamodb = boto3.resource('dynamodb')
 rekognition = boto3.client('rekognition')
 
 
+
 def handler(event, context):
 
+    """
+    the function is triggered when new file is uploaded (created) in the bucket and accordingly starts 
+    image recognition process and update the dynamodb table with the results of the process    
+    """
+     
 
     # create a table object
     table = dynamodb.Table('blobs')
@@ -54,18 +60,7 @@ def handler(event, context):
     )        
     
         print(blobs_upd_resp)
-        #response = table.put_item(
-        #Item={
-        #    'blob_id': key,
-        #    'processed': 'Y',
-        #    'bucket' : bucket,
-        #    'key': key,
-        #    'content_type' : content_type,
-        #    's3_response' : s3_response,
-        #    'error' : error,
-        #    'rekog_response' : rekog_response
-        #        }
-        #    )
+      
     except Exception as e:
         print(e)
         print('Error occured during the process')
@@ -75,22 +70,4 @@ def handler(event, context):
     
     
 
-    
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
-    }
-
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
-
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
+   
