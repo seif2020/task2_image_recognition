@@ -109,7 +109,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/task-2-image-recognition.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635630129919-2021-10-30T21:42:09.919Z/task-2-image-recognition.zip"
               },
               "Handler": "create_blob.handler",
               "Runtime": "python3.8",
@@ -141,7 +141,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/task-2-image-recognition.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635630129919-2021-10-30T21:42:09.919Z/task-2-image-recognition.zip"
               },
               "Handler": "process_blob.handler",
               "Runtime": "python3.8",
@@ -168,7 +168,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/task-2-image-recognition.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635630129919-2021-10-30T21:42:09.919Z/task-2-image-recognition.zip"
               },
               "Handler": "make_callback.handler",
               "Runtime": "python3.8",
@@ -188,36 +188,36 @@
               "CallBackRole"
             ]
           },
-          "CreateBlobLambdaVersionvcGXeWJrJvLWhuaaJ5UHoe07MPbdW67JsP7qcywY": {
+          "CreateBlobLambdaVersionzUeyDwnoXZ6oERW0ucLdYuvfhVEjHq3jxRX2GvgDGc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateBlobLambdaFunction"
               },
-              "CodeSha256": "VAKYX0nwYfV1pA7t3+/eSjVJs8o4UEt2gaao9X6r2Ec=",
+              "CodeSha256": "ICtSoyJclRA84rDIbQgXk3f9z0e1+HltTuH2+lxYAus=",
               "Description": "generate new blob id and request a presigned url form s3 bucket"
             }
           },
-          "ProcessBlobLambdaVersioniCjEotNo0WEJJhxLj9D1t7zrZmWUsyHOIDFdmGF2PI": {
+          "ProcessBlobLambdaVersionpPCRY3a8HvdwkqhRh4dQPjLr05q7vUpaFMBQ8IKkI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ProcessBlobLambdaFunction"
               },
-              "CodeSha256": "VAKYX0nwYfV1pA7t3+/eSjVJs8o4UEt2gaao9X6r2Ec=",
+              "CodeSha256": "ICtSoyJclRA84rDIbQgXk3f9z0e1+HltTuH2+lxYAus=",
               "Description": "triggered when a new image uploaded to the upload bucket to start image recognition process"
             }
           },
-          "CallbackClientLambdaVersionaXrIHnDnmXEP7G6SFm9auhs8TOBkBiWo7LSFY4nJtQ": {
+          "CallbackClientLambdaVersionkvIkqPRwbVHJYhuQssFcRtOGs6QPm54CIRlUy26Q4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CallbackClientLambdaFunction"
               },
-              "CodeSha256": "VAKYX0nwYfV1pA7t3+/eSjVJs8o4UEt2gaao9X6r2Ec=",
+              "CodeSha256": "ICtSoyJclRA84rDIbQgXk3f9z0e1+HltTuH2+lxYAus=",
               "Description": "triggered when recognition process update blobs table with the resul"
             }
           },
@@ -345,7 +345,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z/custom-resources.zip"
+                "S3Key": "serverless/task-2-image-recognition/dev/1635630129919-2021-10-30T21:42:09.919Z/custom-resources.zip"
               },
               "FunctionName": "task-2-image-recognition-dev-custom-resource-existing-s3",
               "Handler": "s3/handler.handler",
@@ -543,7 +543,7 @@
               "CreateBlobLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1635628607161": {
+          "ApiGatewayDeployment1635630109085": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -970,7 +970,7 @@
           "CreateBlobLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateBlobLambdaVersionvcGXeWJrJvLWhuaaJ5UHoe07MPbdW67JsP7qcywY"
+              "Ref": "CreateBlobLambdaVersionzUeyDwnoXZ6oERW0ucLdYuvfhVEjHq3jxRX2GvgDGc"
             },
             "Export": {
               "Name": "sls-task-2-image-recognition-dev-CreateBlobLambdaFunctionQualifiedArn"
@@ -979,7 +979,7 @@
           "ProcessBlobLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ProcessBlobLambdaVersioniCjEotNo0WEJJhxLj9D1t7zrZmWUsyHOIDFdmGF2PI"
+              "Ref": "ProcessBlobLambdaVersionpPCRY3a8HvdwkqhRh4dQPjLr05q7vUpaFMBQ8IKkI"
             },
             "Export": {
               "Name": "sls-task-2-image-recognition-dev-ProcessBlobLambdaFunctionQualifiedArn"
@@ -988,7 +988,7 @@
           "CallbackClientLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CallbackClientLambdaVersionaXrIHnDnmXEP7G6SFm9auhs8TOBkBiWo7LSFY4nJtQ"
+              "Ref": "CallbackClientLambdaVersionkvIkqPRwbVHJYhuQssFcRtOGs6QPm54CIRlUy26Q4"
             },
             "Export": {
               "Name": "sls-task-2-image-recognition-dev-CallbackClientLambdaFunctionQualifiedArn"
@@ -1176,7 +1176,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "CreateBlobLambdaVersionvcGXeWJrJvLWhuaaJ5UHoe07MPbdW67JsP7qcywY"
+        "versionLogicalId": "CreateBlobLambdaVersionzUeyDwnoXZ6oERW0ucLdYuvfhVEjHq3jxRX2GvgDGc"
       },
       "processBlob": {
         "handler": "process_blob.handler",
@@ -1199,7 +1199,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "ProcessBlobLambdaVersioniCjEotNo0WEJJhxLj9D1t7zrZmWUsyHOIDFdmGF2PI"
+        "versionLogicalId": "ProcessBlobLambdaVersionpPCRY3a8HvdwkqhRh4dQPjLr05q7vUpaFMBQ8IKkI"
       },
       "callbackClient": {
         "handler": "make_callback.handler",
@@ -1225,7 +1225,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "CallbackClientLambdaVersionaXrIHnDnmXEP7G6SFm9auhs8TOBkBiWo7LSFY4nJtQ"
+        "versionLogicalId": "CallbackClientLambdaVersionkvIkqPRwbVHJYhuQssFcRtOGs6QPm54CIRlUy26Q4"
       }
     },
     "resources": {
@@ -1610,7 +1610,7 @@
     "artifact": "C:\\Users\\Seif\\task2_image_recognition\\task2_project\\.serverless\\task-2-image-recognition.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/task-2-image-recognition/dev/1635628633110-2021-10-30T21:17:13.110Z",
+    "artifactDirectoryName": "serverless/task-2-image-recognition/dev/1635630129919-2021-10-30T21:42:09.919Z",
     "artifact": "task-2-image-recognition.zip"
   }
 }
