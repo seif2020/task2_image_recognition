@@ -29,17 +29,17 @@ functions:
           path: reqUrl
           method: post
           integration: lambda
-          request:
-            schemas:
-              application/json: 
-                "$schema": "http://json-schema.org/draft-04/schema#" 
-                title: body
-                type: object
-                properties:
-                  callback_url:
-                    type: string
-                  file_name:
-                    type: string
+          # request:
+          #   schemas:
+          #     application/json: 
+                # "$schema": "http://json-schema.org/draft-04/schema#" 
+                # title: body
+                # type: object
+                # properties:
+                #   callback_url:
+                #     type: string
+                #   file_name:
+                #     type: string
    
     environment:
       bucketName: ${self:resources.Resources.uploadBucket.Properties.BucketName}     
