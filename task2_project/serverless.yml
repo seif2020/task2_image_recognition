@@ -29,6 +29,18 @@ functions:
           path: reqUrl
           method: post
           integration: lambda
+          request:
+            schemas:
+              application/json: 
+                "$schema": "http://json-schema.org/draft-04/schema#" 
+                title: body
+                type: object
+                properties:
+                  callback_url:
+                    type: string
+                  file_name:
+                    type: string
+   
     environment:
       bucketName: ${self:resources.Resources.uploadBucket.Properties.BucketName}     
           
@@ -199,7 +211,6 @@ resources:
       Properties:
         Path: /service-role/
         RoleName: callback-role
-        # ${opt:stage, 'dev'}-
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -309,15 +320,8 @@ resources:
 
               IntegrationResponses:
                 - StatusCode: '200'
-                  # SelectionPattern: "2\\d{2}"
-                  # ResponseParameters:
-                  #   method.response.header.Access-Control-Allow-Origin: true
-                  # ResponseTemplates: 
-                  #   application/json: '{}'
                 - StatusCode: '400'
-                  # SelectionPattern: "4\\d{2}"
-                  # ResponseParameters:
-                  #   method.response.header.Access-Control-Allow-Origin: true     
+   
         
     
   ProxyDeployment:
