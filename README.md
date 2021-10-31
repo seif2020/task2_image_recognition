@@ -29,7 +29,6 @@ using the "sls deploy" command .
   
   > I have tested all the test cases provided for the task and also tested wrong type files for the cycle starting from requesting a presigned url up to receiving the results on the callback url ,used **Postman** for testing the POST and PUT operations of the file to the bucket and also for the GET request of the blob item from the table ,also used **Pipedream Requestbin** for the callback url setup and testing and receiving the results from lambda function "callbackClient"
    
-  > **Important note** Finally please if you are willing to deploy the stack more than once please use the bucket variable when using sls deploy command with some specific bucket name in order to avoid 
-    duplication of bucket names in AWS ,i already used a bucket on the serverless template as a default value but you also can override this value using the variable on the cmd example: "sls deploy --bucket custom-bucket-name"
+  > ## **Important note** Finally please if you are willing to deploy the stack more than once please use the bucket variable when using sls deploy command with some specific bucket name in order to avoid duplication of bucket names in AWS ,i already used a bucket on the serverless template as a default value but you also can override this value using the variable on the cmd example: `<sls deploy --bucket custom-bucket-name>`  
    
-  
+  > ## **Also please** make sure to have a docker installed on the same machine where yor run deployment, because some python requirement use Serverless Python Requirements plugin which according to the docs it uses "dockerizePip: true" in custom section in the template ,it simply tells the serverless-python-requirements plugin to compile the Python packages in a Docker container before bundling them in the zip archive to ensure they're compiled for 64-bit Linux.
