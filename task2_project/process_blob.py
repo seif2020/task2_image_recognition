@@ -42,7 +42,7 @@ def handler(event, context):
             print(rekog_response)
              
              
-        labels = [{label['Name'] : str(round(label['Confidence'],2))} for label in rekog_response['Labels']]
+        labels = [{label['Name'] : str(round(label['Confidence'],2))} for label in rekog_response['Labels'] if label['Confidence'] > 95]
         
         
         #update blob item with results of rekognition
